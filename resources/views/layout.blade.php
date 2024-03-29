@@ -47,6 +47,14 @@
                     </li>
                 </ul>
             </div>
+            <div class="navbar-nav d-flex justify-content-end" style="gap:20px">
+                <li class="nav-item">
+                    <a href="/signup" class="nav-link">SignUp</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/auth/login" class="nav-link">SignIn</a>
+                </li>
+            </div>
         </div>
     </nav>
 </header>
