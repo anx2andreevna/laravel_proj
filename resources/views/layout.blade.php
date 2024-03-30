@@ -45,6 +45,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="contact">Contacts</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/article/show">Articles</a>
+                    </li>
                 </ul>
             </div>
             <div class="navbar-nav d-flex justify-content-end" style="gap:20px">
@@ -63,7 +66,7 @@
         @yield('content')
     </div>
 </main>
-<footer class="bg-body-tertiary text-center text-lg-start" style="position: fixed; left: 0; bottom: 0; width: 100%;">
+<footer class="bg-dark text-light text-center text-lg-start" style="position: fixed; left: 0; bottom: 0; width: 100%;">
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
         Цветкова Анна Андреевна, 221-322
     </div>
