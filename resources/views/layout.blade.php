@@ -441,12 +441,19 @@
                 </ul>
             </div>
             <div class="navbar-nav d-flex justify-content-end" style="gap:20px">
-                <li class="nav-item">
-                    <a href="/signup" class="nav-link">SignUp</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/auth/login" class="nav-link">SignIn</a>
-                </li>
+                @guest
+                    <li class="nav-item">
+                        <a href="/auth/create" class="nav-link">SignUp</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/auth/login" class="nav-link">SignIn</a>
+                    </li>
+                @endguest
+                @auth
+                    <li class="nav-item">
+                        <a href="/auth/logout" class="nav-link">Logout</a>
+                    </li>
+                @endauth
             </div>
         </div>
     </nav>
