@@ -417,46 +417,61 @@
     </script>
 </body>
 <header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="about">About us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact">Contacts</a>
-                    </li>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">News</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                @can('create')
                     <li class="nav-item">
-                        <a class="nav-link" href="/article">Articles</a>
+                        <a class="nav-link" href="/article/create">Create Article<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/article/create">Create article</a>
+                        <a class="nav-link" href="/comment">Comments<span class="sr-only">(current)</span></a>
                     </li>
-
-                </ul>
-            </div>
-            <div class="navbar-nav d-flex justify-content-end" style="gap:20px">
-                @guest
-                    <li class="nav-item">
-                        <a href="/auth/create" class="nav-link">SignUp</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="/auth/login" class="nav-link">SignIn</a>
-                    </li>
-                @endguest
-                @auth
-                    <li class="nav-item">
-                        <a href="/auth/logout" class="nav-link">Logout</a>
-                    </li>
-                @endauth
-            </div>
+                @endcan
+                <li class="nav-item">
+                    <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact">Contacts</a>
+                </li>
+                {{-- @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                New comment <span>{{ auth()->user()->unreadNotifications->count() }}</span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                @foreach (auth()->user()->unreadNotifications as $notification)
+                                    <a class="dropdown-item"
+                                        href="{{ route('article.show', ['article' => $notification->data['article']['id'], 'notify' => $notification->id]) }}">for
+                                        Article: {{ $notification->data['article']['name'] }}</a>
+                                @endforeach
+                            </div>
+                        </li>
+                    @endauth --}}
+            </ul>
+        </div>
+        <div class="navbar-nav d-flex justify-content-end" style="gap:20px">
+            @guest
+                <li class="nav-item">
+                    <a href="/create" class="nav-link">SignUp</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/login" class="nav-link">SignIn</a>
+                </li>
+            @endguest
+            @auth
+                <li class="nav-item">
+                    <a href="/logout" class="nav-link">Logout</a>
+                </li>
+            @endauth
+        </div>
         </div>
     </nav>
 </header>

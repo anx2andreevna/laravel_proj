@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\Article;
-use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Jobs\VeryLongJob;
-use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
@@ -16,7 +15,8 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = Article::latest()->paginate(7);
-        return view('articles/index', ['articles' => $articles]);
+        //return view('articles/index', ['articles' => $articles]);
+        return response()->json($articles, 201);
     }
 
     /**
@@ -24,8 +24,8 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        Gate::authorize('create', [self::class]);
-        return view('articles.create');
+        // $this->authorize('create', [self::class]);
+        // return view('articles/create');
     }
 
     /**
@@ -49,7 +49,8 @@ class ArticleController extends Controller
 
         $result = $article->save();
         if ($result) VeryLongJob::dispatch($article); //отправка заданий
-        return redirect(route('article.index'));
+        //return redirect(route('article.index'));
+        return response()->json($result, 201);
     }
 
     /**
@@ -57,10 +58,8 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        $comments = Comment::where('article_id', $article->id)
-                            ->where('accept', true)
-                            ->latest()->paginate(2);
-        return view('articles.show', ['article' => $article, 'comments' => $comments]);
+        //return view('articles/show', ['article' => $article]);
+        return response()->json($article, 201);
     }
 
     /**
@@ -68,8 +67,8 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        Gate::authorize('create', [self::class]);
-        return view('articles/edit', ['article' => $article]);
+        //return view('articles/edit', ['article' => $article]);
+        return response()->json($article, 201);
 
     }
 
@@ -78,7 +77,6 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        Gate::authorize('create', [self::class]);
         $request->validate([
             'datePublic'=>'required',
             'title'=>'required',
@@ -91,7 +89,9 @@ class ArticleController extends Controller
         $article->desc = $request->desc;
 
         $result = $article->save();
-        return redirect(route('article.show', ['article'=>$article->id]));
+        //return redirect(route('article.show', ['article'=>$article->id]));
+        return response()->json($result, 201);
+
     }
 
     /**
@@ -99,10 +99,8 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        Gate::authorize('create', [self::class]);
-        Comment::where('article_id', $article->id)->delete();
-        $article->delete();
-        return redirect('/');
-        
+        // $article->delete();
+        // return redirect()->route('article.index');
+        return response()->json($article->delete(), 201);
     }
 }

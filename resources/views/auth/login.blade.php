@@ -1,6 +1,6 @@
 @extends('layout')
 @section('content')
-    <form action="/auth/signIn" method="post">
+    <form action="/login" method="post">
         @csrf
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
