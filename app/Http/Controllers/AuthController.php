@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function create(){
-        return view('auth/signup');
+        //return view('auth/signup');
     }
 
     public function signUp(Request $request){
@@ -28,12 +28,19 @@ class AuthController extends Controller
 
         ]);
 
-        $user ->createToken('myAppToken');
-        return redirect()->route('login');
+        $token = $user ->createToken('myAppToken');
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+        return response()->json($response, 201);
+
+
+        //return redirect()->route('login');
     }
     //открытие поля для аунтификации
     public function login(){
-        return view('auth.login');
+       // return view('auth.login');
     }
 
     //обработка отправки формы (подтверждение аутентификации)
@@ -50,11 +57,19 @@ class AuthController extends Controller
         ];
 
         //передаем массив в фасад Auth (отвечает за авторизацию польз)
-        if (Auth::attempt($credentials)){
-            //обновляем тек сессию
-            $request->session()->regenerate(); //если авторизаия пройдена, сравниваем введенные значения с данными в бд
-            return redirect('/');
+        if (!Auth::attempt($credentials)){
+            return response('Bad login', 401);
         }
+
+        $user = User::where('email', request('email'))->first();
+
+        $token = $user ->createToken('myAppToken');
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+        return response()->json($response, 201);
+
 
         return back()->withErrors([
             'email'=> 'The provided credentials do not match out records'
@@ -64,8 +79,6 @@ class AuthController extends Controller
      //разлогиниться
      public function logout(Request $request){
         Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/');
+        return response(['Message'=>'Log out'], 201);
     }
 }

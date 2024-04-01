@@ -25,11 +25,6 @@ Route::resource('article', ArticleController::class)->middleware('auth:sanctum')
 // });
 
 //auth
-// Route::get('/auth/create', [AuthController::class, 'create']);
-// Route::post('/auth/signUp', [AuthController::class, 'signUp']);
-// Route::get('/auth/login', [AuthController::class, 'login'])->name('login');
-// Route::post('/auth/signIn', [AuthController::class, 'customLogin']);
-
 Route::get('/auth/create', [AuthController::class, 'create']);
 Route::post('/auth/signUp', [AuthController::class, 'signUp']);
 Route::get('/auth/login', [AuthController::class, 'login'])->name('login');
