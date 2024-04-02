@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Mail\CommentMail;
 use App\Models\Article;
 use App\Models\User;
-use App\Notifications\CommentNotifi;
+use App\Notifications\CommentNotify;
 use App\Jobs\VeryLongJob;
 
 
@@ -39,7 +39,8 @@ class CommentController extends Controller
 
         $comment->accept = true;
         $comment->save();
-        //Notification::send($users, new CommentNotifi($article));
+        $users = User::where('id', '!=', auth()->id())->get();
+        Notification::send($users, new CommentNotify($article));
         return redirect('/comment');
     }
 
@@ -73,9 +74,16 @@ class CommentController extends Controller
         $result = $article->save();
         //if ($result) Mail::send(new CommentMail($comment, $article->title));
         //if ($res) VeryLongJob::dispatch($comment, $article->title);
-        if ($res) {
-            VeryLongJob::dispatch($comment, $article->title); // Dispatch the job with comment and article title
-        }
+        // if ($res) {
+        //     VeryLongJob::dispatch($comment, $article->title); // Dispatch the job with comment and article title
+        // }
+
+        // $users = User::where('id', '!=', auth()->id())->get();
+        // Log::alert($users);
+        // if($res) {
+        //     // Mail::to('anion.23@mail.ru')->send(new CommentMail($comment, $article->name));
+        //     Notification::send($users, new CommentNotify($article));
+        // }
         return redirect()->route('article.show', ['article'=>$comment->article_id, 'res'=>$res]);
     }
 

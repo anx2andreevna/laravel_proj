@@ -440,21 +440,21 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/contact">Contacts</a>
                 </li>
-                {{-- @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                New comment <span>{{ auth()->user()->unreadNotifications->count() }}</span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @foreach (auth()->user()->unreadNotifications as $notification)
-                                    <a class="dropdown-item"
-                                        href="{{ route('article.show', ['article' => $notification->data['article']['id'], 'notify' => $notification->id]) }}">for
-                                        Article: {{ $notification->data['article']['name'] }}</a>
-                                @endforeach
-                            </div>
-                        </li>
-                    @endauth --}}
+                @auth
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            New comment <span>{{ auth()->user()->unreadNotifications->count() }}</span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            @foreach (auth()->user()->unreadNotifications as $notification)
+                                <a class="dropdown-item"
+                                    href="{{ route('article.show', ['article' => $notification->data['article']['id'], 'notify' => $notification->id]) }}">for
+                                    Article: {{ $notification->data['article']['title'] }}</a>
+                            @endforeach
+                        </div>
+                    </li>
+                @endauth
             </ul>
         </div>
         <div class="navbar-nav d-flex justify-content-end" style="gap:20px">

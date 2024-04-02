@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Jobs\VeryLongJob;
 use Illuminate\Support\Facades\Gate;
 
+use App\Mail\ArticleMail;
+
+
 class ArticleController extends Controller
 {
     /**
@@ -58,6 +61,9 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        if(isset($_GET['notify'])) {
+            auth()->user()->notifications->where('id', $_GET['notify'])->first()->markAsRead();
+        }
         $comments = Comment::where('article_id', $article->id)
                             ->where('accept', true)
                             ->latest()->paginate(2);
