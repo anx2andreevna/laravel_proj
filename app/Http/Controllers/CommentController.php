@@ -10,10 +10,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
-use App\Mail\AdminComment;
+use App\Mail\CommentMail;
 use App\Models\Article;
 use App\Models\User;
 use App\Notifications\CommentNotifi;
+use App\Jobs\VeryLongJob;
 
 
 
@@ -69,8 +70,11 @@ class CommentController extends Controller
         // $comment->author_id = Auth::id();
         $comment->user()->associate(auth()->user());
         $res = $comment->save();
-        if($res) {
-            // Mail::to('moosbeere_O@mail.ru')->send(new AdminComment($comment, $article->name));
+        $result = $article->save();
+        //if ($result) Mail::send(new CommentMail($comment, $article->title));
+        //if ($res) VeryLongJob::dispatch($comment, $article->title);
+        if ($res) {
+            VeryLongJob::dispatch($comment, $article->title); // Dispatch the job with comment and article title
         }
         return redirect()->route('article.show', ['article'=>$comment->article_id, 'res'=>$res]);
     }
