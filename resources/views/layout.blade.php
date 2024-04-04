@@ -403,7 +403,83 @@
 </head>
 
 <body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">News</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    @can('create')
+                        <li class="nav-item">
+                            <a class="nav-link" href="/article/create">Create Article<span
+                                    class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/comment">Comments<span class="sr-only">(current)</span></a>
+                        </li>
+                    @endcan
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contacts</a>
+                    </li>
+                    @auth
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                New comments <span>{{ auth()->user()->unreadNotifications->count() }}</span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                @foreach (auth()->user()->unreadNotifications as $notification)
+                                    <a class="dropdown-item"
+                                        href="{{ route('article.show', ['article' => $notification->data['article']['id'], 'notify' => $notification->id]) }}">for
+                                        Article: {{ $notification->data['article']['title'] }}</a>
+                                @endforeach
+                            </div>
+                        </li>
+                    @endauth
+                </ul>
+            </div>
+            <div class="navbar-nav d-flex justify-content-end" style="gap:20px">
+                @guest
+                    <li class="nav-item">
+                        <a href="/create" class="nav-link">SignUp</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/login" class="nav-link">SignIn</a>
+                    </li>
+                @endguest
+                @auth
+                    <li class="nav-item">
+                        <a href="/logout" class="nav-link">Logout</a>
+                    </li>
+                @endauth
+            </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div id="app">
+            <App />
+        </div>
+
+        <div class='container'>
+            @yield('content')
+        </div>
+    </main>
+    <footer class="bg-dark text-light text-center text-lg-start"
+        style="position: fixed; left: 0; bottom: 0; width: 100%;">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+            Цветкова Анна Андреевна, 221-322
+        </div>
+    </footer>
+    <script src="{{ asset('// resources/js/listeners/ArticleCreateListener.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -416,74 +492,5 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
 </body>
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">News</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                @can('create')
-                    <li class="nav-item">
-                        <a class="nav-link" href="/article/create">Create Article<span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/comment">Comments<span class="sr-only">(current)</span></a>
-                    </li>
-                @endcan
-                <li class="nav-item">
-                    <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/contact">Contacts</a>
-                </li>
-                {{-- @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                New comment <span>{{ auth()->user()->unreadNotifications->count() }}</span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @foreach (auth()->user()->unreadNotifications as $notification)
-                                    <a class="dropdown-item"
-                                        href="{{ route('article.show', ['article' => $notification->data['article']['id'], 'notify' => $notification->id]) }}">for
-                                        Article: {{ $notification->data['article']['name'] }}</a>
-                                @endforeach
-                            </div>
-                        </li>
-                    @endauth --}}
-            </ul>
-        </div>
-        <div class="navbar-nav d-flex justify-content-end" style="gap:20px">
-            @guest
-                <li class="nav-item">
-                    <a href="/create" class="nav-link">SignUp</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/login" class="nav-link">SignIn</a>
-                </li>
-            @endguest
-            @auth
-                <li class="nav-item">
-                    <a href="/logout" class="nav-link">Logout</a>
-                </li>
-            @endauth
-        </div>
-        </div>
-    </nav>
-</header>
-<main>
-    <div class='container'>
-        @yield('content')
-    </div>
-</main>
-<footer class="bg-dark text-light text-center text-lg-start" style="position: fixed; left: 0; bottom: 0; width: 100%;">
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
-        Цветкова Анна Андреевна, 221-322
-    </div>
-</footer>
 
 </html>

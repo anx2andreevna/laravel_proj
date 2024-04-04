@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Comment;
 use Illuminate\Http\Request;
-use App\Jobs\VeryLongJob;
+use App\Jobs\MailJob;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ArticleMail;
+use App\Events\ArticleCreateEvent;
+use App\Notifications\CommentNotify;
 
 class ArticleController extends Controller
 {
@@ -46,10 +50,11 @@ class ArticleController extends Controller
         $article->title = $request->title;
         $article->shortDesc = $request->shortDesc;
         $article->desc = $request->desc;
-
-        $result = $article->save();
+        $article->save();
         //if ($result) VeryLongJob::dispatch($article); //отправка заданий
-        if ($result) Mail::send(new ArticleMail($article));
+        //if ($result) Mail::send(new ArticleMail($article));
+        MailJob::dispatch($article);
+        ArticleCreateEvent::dispatch($article);
         return redirect(route('article.index'));
     }
 
@@ -58,6 +63,10 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
+        if(isset($_GET['notify'])) {
+            auth()->user()->notifications->where('id', $_GET['notify'])->first()->markAsRead();
+        }
+
         $comments = Comment::where('article_id', $article->id)
                             ->where('accept', true)
                             ->latest()->paginate(2);
