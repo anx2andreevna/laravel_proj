@@ -32,10 +32,10 @@ class CommentController extends Controller
         $users = User::where('id', '!=', $comment->author_id)->get();
         $article = Article::findOrFail($comment->article_id);
 
-        // $caches = DB::table('cache')->whereRaw('`key` GLOB :key',  [':key'=> 'article/*[0-9]:[0-9]'])->get();
-        // foreach($caches as $cache){
-        //     Cache::forget($cache->key);
-        // }
+        $caches = DB::table('cache')->whereRaw('`key` GLOB :key',  [':key'=> 'article/*[0-9]:[0-9]'])->get();
+        foreach($caches as $cache){
+            Cache::forget($cache->key);
+        }
 
         $comment->accept = true;
         $comment->save();
@@ -47,10 +47,10 @@ class CommentController extends Controller
 
     public function reject(int $id){
 
-        // $caches = DB::table('cache')->whereRaw('`key` GLOB :key',  [':key'=> 'article/*[0-9]:[0-9]'])->get();
-        // foreach($caches as $cache){
-        //     Cache::forget($cache->key);
-        // }
+        $caches = DB::table('cache')->whereRaw('`key` GLOB :key',  [':key'=> 'article/*[0-9]:[0-9]'])->get();
+        foreach($caches as $cache){
+            Cache::forget($cache->key);
+        }
 
         $comment = Comment::findOrFail($id);
         $comment->accept = false;
@@ -74,11 +74,7 @@ class CommentController extends Controller
         $res = $comment->save();
         $result = $article->save();
         //if ($result) Mail::send(new CommentMail($comment, $article->title));
-        //if ($res) VeryLongJob::dispatch($comment, $article->title);
-     
-            VeryLongJob::dispatch($comment, $article->title); // Dispatch the job with comment and article title
-        
-
+        if ($res) VeryLongJob::dispatch($comment, $article->title);
         // $users = User::where('id', '!=', auth()->id())->get();
         // Log::alert($users);
         // if($res) {
@@ -95,10 +91,11 @@ class CommentController extends Controller
     }
 
     public function update($id, Request $request){
-        // $caches = DB::table('cache')->whereRaw('`key` GLOB :key',  [':key'=> 'article/*[0-9]:[0-9]'])->get();
-        // foreach($caches as $cache){
-        //     Cache::forget($cache->key);
-        // }
+        $caches = DB::table('cache')->whereRaw('`key` GLOB :key',  [':key'=> 'article/*[0-9]:[0-9]'])->get();
+        foreach($caches as $cache){
+            Cache::forget($cache->key);
+        }
+
         $request->validate([
             'title' => 'required',
             'text' => 'required',
@@ -113,10 +110,10 @@ class CommentController extends Controller
 
     public function delete($id){
 
-        // $caches = DB::table('cache')->whereRaw('`key` GLOB :key',  [':key'=> 'article/*[0-9]:[0-9]'])->get();
-        // foreach($caches as $cache){
-        //     Cache::forget($cache->key);
-        // }
+        $caches = DB::table('cache')->whereRaw('`key` GLOB :key',  [':key'=> 'article/*[0-9]:[0-9]'])->get();
+        foreach($caches as $cache){
+            Cache::forget($cache->key);
+        }
         
         $comment = Comment::findOrFail($id);
         Gate::authorize('comment', $comment);
