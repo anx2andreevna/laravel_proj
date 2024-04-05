@@ -72,11 +72,11 @@ class CommentController extends Controller
         $comment->user()->associate(auth()->user());
         $res = $comment->save();
         $result = $article->save();
-        //if ($result) Mail::send(new CommentMail($comment, $article->title));
-        //if ($res) VeryLongJob::dispatch($comment, $article->title);
-        if ($res) {
-            VeryLongJob::dispatch($comment, $article->title); // Dispatch the job with comment and article title
-        }
+        //if ($res) Mail::send(new CommentMail($comment, $article->title));
+        if ($res) VeryLongJob::dispatch($comment, $article->title);
+        // if ($res) {
+        //     VeryLongJob::dispatch($comment, $article->title); // Dispatch the job with comment and article title
+        // }
         return redirect()->route('article.show', ['article'=>$comment->article_id, 'res'=>$res]);
     }
 

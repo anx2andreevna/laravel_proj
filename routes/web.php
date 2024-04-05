@@ -23,7 +23,7 @@ Route::get('/', function(){
 });
 
 Route::resource('article', ArticleController::class)->middleware('auth:sanctum');  // + проверка авторизации по наличию токена в сессии
-//Route::get('article/{article}', [ArticleController::class, 'show'])->middleware('auth:sanctum','stat')->name('article.show');
+Route::get('article/{article}', [ArticleController::class, 'show'])->middleware('auth:sanctum','stat')->name('article.show');
 
 // Route::group(['prefix'=>'/article', 'middleware'=>'auth'], function(){
 //     Route::get('', [ArticleController::class, 'index']);

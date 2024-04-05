@@ -63,7 +63,7 @@ class ArticleController extends Controller
         $article->desc = $request->desc;
         $article->save();
         //if ($result) VeryLongJob::dispatch($article); //отправка заданий
-        //if ($result) Mail::send(new ArticleMail($article));
+        //Mail::send(new ArticleMail($article));
         MailJob::dispatch($article);
         ArticleCreateEvent::dispatch($article);
         return redirect(route('article.index'));

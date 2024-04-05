@@ -30,7 +30,7 @@ class CommentMail extends Mailable
     public function build()
     {
         return $this->from(env('MAIL_USERNAME'))
-                    //->to('anion.23@mail.ru')
+                    ->to('anion.23@mail.ru')
                     ->view('mail.comment', ['article' => $this->article, 'comment'=>$this->comment]);
     }
 }
