@@ -39,7 +39,8 @@ class CommentController extends Controller
 
         $comment->accept = true;
         $comment->save();
-        //Notification::send($users, new CommentNotifi($article));
+        $users = User::where('id', '!=', auth()->id())->get();
+        Notification::send($users, new CommentNotify($article));
         return redirect('/comment');
     }
 
