@@ -7,12 +7,6 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Jobs\MailJob;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ArticleMail;
-use App\Events\ArticleCreateEvent;
-use App\Notifications\CommentNotify;
 
 class ArticleController extends Controller
 {
@@ -74,12 +68,6 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        $currentPage = request('page') ? request('page') : 1;
-
-        if(isset($_GET['notify'])) {
-            auth()->user()->notifications->where('id', $_GET['notify'])->first()->markAsRead();
-        }
-
         $comments = Comment::where('article_id', $article->id)
                             ->where('accept', true)
                             ->latest()->paginate(2);
