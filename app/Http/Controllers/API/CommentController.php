@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Models\Comment;
@@ -23,7 +23,7 @@ class CommentController extends Controller
 
     public function index(){
         $comments = Comment::latest()->paginate(10);
-        return view('comments.index', ['comments'=>$comments]);
+        return response()->json(['comments'=>$comments]);
     }
 
     public function accept(int $id){ 
@@ -38,10 +38,9 @@ class CommentController extends Controller
         }
 
         $comment->accept = true;
-        $comment->save();
-        $users = User::where('id', '!=', auth()->id())->get();
-        Notification::send($users, new CommentNotify($article));
-        return redirect('/comment');
+        $res = $comment->save();
+        Notification::send($users, new CommentNotifi($article));
+        return response($res);
     }
 
     public function reject(int $id){
@@ -53,8 +52,8 @@ class CommentController extends Controller
 
         $comment = Comment::findOrFail($id);
         $comment->accept = false;
-        $comment->save();
-        return redirect('/comment');
+        $res = $comment->save();
+        return response($res);
     }
 
     public function store(Request $request){
@@ -71,19 +70,18 @@ class CommentController extends Controller
         // $comment->author_id = Auth::id();
         $comment->user()->associate(auth()->user());
         $res = $comment->save();
-        $result = $article->save();
         //if ($res) Mail::send(new CommentMail($comment, $article->title));
         //if ($res) VeryLongJob::dispatch($comment, $article->title);
         // if ($res) {
         //     VeryLongJob::dispatch($comment, $article->title); // Dispatch the job with comment and article title
         // }
-        return redirect()->route('article.show', ['article'=>$comment->article_id, 'res'=>$res]);
+        return response()->json(['article'=>$comment->article_id, 'res'=>$res]);
     }
 
     public function edit($id){
         $comment = Comment::findOrFail($id);
         Gate::authorize('comment', $comment);
-        return view('comments.edit', ['comment'=>$comment]);
+        return response()->json(['comment'=>$comment]);
     }
 
     public function update($id, Request $request){
@@ -101,7 +99,7 @@ class CommentController extends Controller
         $comment->text = $request->text;
         $comment->article_id = $comment->article_id;
         $comment->save();
-        return redirect()->route('article.show', ['article'=>$comment->article_id]);
+        return response()->json(['article'=>$comment->article_id]);
     }
 
     public function delete($id){
@@ -113,7 +111,7 @@ class CommentController extends Controller
         
         $comment = Comment::findOrFail($id);
         Gate::authorize('comment', $comment);
-        $comment->delete();
-        return redirect()->route('article.show', ['article'=>$comment->article_id]);
+        $res = $comment->delete();
+        return response($res);
     }
 }

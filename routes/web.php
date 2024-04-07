@@ -48,6 +48,7 @@ Route::group(['prefix'=>'/comment', 'middleware'=>'auth:sanctum'], function(){
 // Route::get('/auth/login', [AuthController::class, 'login'])->name('login');
 // Route::post('/auth/signIn', [AuthController::class, 'customLogin']);
 // Route::get('/auth/logout', [AuthController::class, 'logout']);
+
 //Auth
 Route::get('/create', [AuthController::class, 'create'])->middleware('guest');
 Route::post('/registr', [AuthController::class, 'registr']);

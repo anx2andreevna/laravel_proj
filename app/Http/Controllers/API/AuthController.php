@@ -23,13 +23,13 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
-            'name' => request('name'),
-            'email' => request('email'),
-            'password' => Hash::make(request('password')),
+            'name' => $request->name, 
+            'email'=> $request->email,
+            'password' => Hash::make($request->password),
 
         ]);
 
-        $token = $user ->createToken('myAppToken');
+        $token = $user ->createToken('myAppToken')->plainTextToken;
         $response = [
             'user' => $user,
             'token' => $token
@@ -46,40 +46,21 @@ class AuthController extends Controller
 
     //обработка отправки формы (подтверждение аутентификации)
     public function customLogin(Request $request) {
-        $request->validate([
+        $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6'
         ]);
 
-        //массив с параметрами необходимыми для авторизации
-        $credentials = [
-            'email'=>request('email'), //получаем с пользоват ввода
-            'password'=>request('password'),
-        ];
-
-        //передаем массив в фасад Auth (отвечает за авторизацию польз)
-        if (!Auth::attempt($credentials)){
-            return response('Bad login', 401);
+        if (Auth::attempt($credentials)){
+            $token = auth()->user()->createToken('myAppToken');
+            return response($token, 201);
         }
-
-        $user = User::where('email', request('email'))->first();
-
-        $token = $user ->createToken('myAppToken');
-        $response = [
-            'user' => $user,
-            'token' => $token
-        ];
-        return response()->json($response, 201);
-
-
-        return back()->withErrors([
-            'email'=> 'The provided credentials do not match out records'
-        ]);
+        return response('Bad login', 401);
     }
 
      //разлогиниться
      public function logout(Request $request){
-        Auth::logout();
-        return response(['Message'=>'Log out'], 201);
+        auth()->user()->tokens()->delete();
+        return response('logout');
     }
 }

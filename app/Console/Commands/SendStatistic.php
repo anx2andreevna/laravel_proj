@@ -10,7 +10,7 @@ use App\Models\Path;
 use Carbon\Carbon;
 use App\Models\Comment;
 
-class SendStatistic extends Command
+class sendStatistic extends Command
 {
     /**
      * The name and signature of the console command.

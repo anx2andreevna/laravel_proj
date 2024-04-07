@@ -26,35 +26,17 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->registerPolicies();
-
-        // Gate::before(function(User $user){
-        //     if ($user->role === 'moderator') return true;
-        // });
-
-        // Gate::define('comment', function(User $user, Comment $comment){
-        //     return $user->id === $comment->author_id ?
-        //             Response::allow() :
-        //             Response::deny('Вы не автор!');
-        // });
-
-
         $this->registerPolicies();
 
-        Gate::define('create', function(User $user){
-            return $user->role_id == 1 ?
-                Response::allow() :
-                Response::deny('Вы не модератор!');
+        Gate::before(function(User $user){
+            if ($user->role_id == 1) return true;
         });
-
-        // Gate::before(function(User $user){
-        //     if ($user->role === 'moderator') return true;
-        // });
 
         Gate::define('comment', function(User $user, Comment $comment){
             return $user->id === $comment->author_id ?
                     Response::allow() :
                     Response::deny('Вы не автор!');
         });
+
     }
 }
