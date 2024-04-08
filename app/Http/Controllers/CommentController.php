@@ -22,7 +22,7 @@ class CommentController extends Controller
 {
 
     public function index(){
-        $comments = Comment::latest()->paginate(10);
+        $comments = Comment::whereNull('accept')->latest()->paginate(10);
         return view('comments.index', ['comments'=>$comments]);
     }
 
@@ -73,7 +73,7 @@ class CommentController extends Controller
         $res = $comment->save();
         $result = $article->save();
         //if ($res) Mail::send(new CommentMail($comment, $article->title));
-        //if ($res) VeryLongJob::dispatch($comment, $article->title);
+        if ($res) VeryLongJob::dispatch($comment, $article->title);
         // if ($res) {
         //     VeryLongJob::dispatch($comment, $article->title); // Dispatch the job with comment and article title
         // }

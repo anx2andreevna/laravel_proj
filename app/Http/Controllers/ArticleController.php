@@ -79,9 +79,11 @@ class ArticleController extends Controller
     if(isset($_GET['notify'])) {
         auth()->user()->notifications->where('id', $_GET['notify'])->first()->markAsRead();
     }
-        $comments = Comment::where('article_id', $article->id)
-                            ->where('accept', true)
-                            ->latest()->paginate(2);
+    $comments = Cache::remember('article/'.$article->id.':'.$currentPage, 3000, function()use($article){
+        return Comment::where('article_id', $article->id)
+                         ->where('accept', true)
+                         ->latest()->paginate(2);
+    });
         return view('articles.show', ['article' => $article, 'comments' => $comments]);
     }
 

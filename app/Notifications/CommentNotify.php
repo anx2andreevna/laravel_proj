@@ -26,7 +26,7 @@ class CommentNotify extends Notification
      *
      * @return array<int, string>
      */
-    public function via(object $notifiable)
+    public function via(object $notifiable) //способ доставки увед
     {
         return ['database'];
     }

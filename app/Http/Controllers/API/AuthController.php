@@ -14,7 +14,7 @@ class AuthController extends Controller
         //return view('auth/signup');
     }
 
-    public function signUp(Request $request){
+    public function registr(Request $request){
         
         $request->validate([
             'name'=>'required',
@@ -60,7 +60,8 @@ class AuthController extends Controller
 
      //разлогиниться
      public function logout(Request $request){
-        auth()->user()->tokens()->delete();
-        return response('logout');
+        //auth()->user()->tokens()->delete();
+        //return response('logout');
+        return response(['Message'=>'Log out'], 201);
     }
 }

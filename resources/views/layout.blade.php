@@ -478,7 +478,6 @@
             Цветкова Анна Андреевна, 221-322
         </div>
     </footer>
-    <script src="{{ asset('// resources/js/listeners/ArticleCreateListener.js') }}"></script>
     <script src="{{ mix('js/app.js') }}"></script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

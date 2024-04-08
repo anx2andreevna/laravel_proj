@@ -42,10 +42,14 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        Gate::authorize('create', [self::class]);
+        
         $caches = DB::table('cache')->whereRaw('`key` GLOB :key',  [':key'=> 'articleAll*[0-9]'])->get();
         foreach($caches as $cache){
             Cache::forget($cache->key);
         }
+
+        
 
         $request->validate([
             'title'=>'required',

@@ -39,7 +39,9 @@ class ArticleControllerPolicy
      */
     public function update(User $user, Article $article): bool
     {
-        //
+        return $user->role_id == 1 
+        ? Response::allow() 
+        : Response::deny('Вы не модератор!');
     }
 
     /**
@@ -47,7 +49,9 @@ class ArticleControllerPolicy
      */
     public function delete(User $user, Article $article): bool
     {
-        //
+        return $user->role_id == 1 
+        ? Response::allow() 
+        : Response::deny('Вы не модератор!');
     }
 
     /**
